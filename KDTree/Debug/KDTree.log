@@ -1,7 +1,5 @@
-﻿  KDNode.cpp
-  KDTree.cpp
+﻿  KDTree.cpp
   main.cpp
-  Point.cpp
   Génération de code en cours...
 D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(216): warning C4715: 'KDTree::findNode_rec' : les chemins de contrôle ne retournent pas tous une valeur
   KDTree.vcxproj -> D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\Debug\KDTree.exe

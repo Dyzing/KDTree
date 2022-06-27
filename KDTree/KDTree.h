@@ -16,10 +16,12 @@ public:
 	KDTree();
 	KDTree(int const& nb_dim);
 
-	void addNode(Point const & p);
+	std::vector<KDNode>& getVect_Noeuds() { return vect_noeuds; };
+
+	void addNode(KDNode& kdn, std::vector<KDNode>& vn);
 	void addNode_rec(KDNode& kdn, KDNode & nc, int  disc);
-	void deleteNode(Point p);
-	void deleteNode_rec(KDNode& kdn, KDNode nc, int  disc, std::vector<KDNode> vec_children);
+	void deleteNode(KDNode& kdn, std::vector<KDNode>& vn);
+	void deleteNode_rec(KDNode& kdn, KDNode nc, int  disc, std::vector<KDNode> vec_children, std::vector<KDNode>& vn);
 	void putChildrenInVec_rec(KDNode& nc, int  disc, std::vector<KDNode> vec_children);
 	KDNode findNode(Point p);
 	KDNode findNode_rec(KDNode kdn, KDNode nc, int  disc);
