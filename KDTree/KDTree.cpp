@@ -24,7 +24,7 @@ void KDTree::addNode(KDNode & kdn, std::vector<KDNode>& vn)
 	else
 	{
 		niveau_actuel = 0;
-		Point point_courant;
+		Point point_courant(nb_dimension);
 		KDNode noeud_courrant(point_courant);
 		noeud_courrant = vn[0];
 		int disc = niveau_actuel % nb_dimension;
@@ -53,6 +53,11 @@ void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc, std::vector<KDNode>
 			{
 				if (vn[i].getPoint().isPointEquals(nc.getLeftChild()->getPoint()))
 				{
+					addNode_rec(kdn, *nc.getLeftChild(), disc, vn);
+					//break;
+				}
+				if (vn[i].getPoint().isPointEquals(nc.getLeftChild()->getPoint()))
+				{
 					addNode_rec(kdn, vn[i], disc, vn);
 					break;
 				}
@@ -75,6 +80,12 @@ void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc, std::vector<KDNode>
 			int i = 0;
 			while (i < vn.size())
 			{
+				if (vn[i].getPoint().isPointEquals(nc.getRightChild()->getPoint()))
+				{
+					addNode_rec(kdn, *nc.getRightChild(), disc, vn);
+					//addNode_rec(kdn, vn[i], disc, vn);
+					//break;
+				}
 				if (vn[i].getPoint().isPointEquals(nc.getRightChild()->getPoint()))
 				{
 					addNode_rec(kdn, vn[i], disc, vn);
@@ -105,7 +116,7 @@ void KDTree::deleteNode(KDNode& kdn, std::vector<KDNode>& vn, std::vector<KDNode
 	else
 	{
 		niveau_actuel = 0;
-		Point point_courant;
+		Point point_courant(nb_dimension);
 		KDNode noeud_courrant(point_courant);
 		noeud_courrant = vect_noeuds[0];
 		int disc = niveau_actuel % nb_dimension;
@@ -115,7 +126,7 @@ void KDTree::deleteNode(KDNode& kdn, std::vector<KDNode>& vn, std::vector<KDNode
 
 void KDTree::deleteNode_rec(KDNode& kdn, KDNode & nc, int disc, std::vector<KDNode> vec_children, std::vector<KDNode>& vn, std::vector<KDNode>& vec_childrens_stay)
 {
-	Point temp_p;
+	Point temp_p(nb_dimension);
 	KDNode temp_kdn(temp_p);
 	if (kdn.getPoint().isPointEquals(nc.getPoint()))
 	{
@@ -247,23 +258,26 @@ KDNode KDTree::findNode(Point p)
 	KDNode kdn(p);
 	if (vect_noeuds.size() == 0)
 	{
-		Point p_default("default", { -1000, -1000 });
+		Point p_default("default", { -1000, -1000 }, nb_dimension);
 		KDNode default_node(p_default);
 		return default_node;
 	}
 	else
 	{
 		niveau_actuel = 0;
-		Point point_courant;
+		Point point_courant(nb_dimension);
 		KDNode noeud_courrant(point_courant);
 		noeud_courrant = vect_noeuds[0];
 		int disc = niveau_actuel % nb_dimension;
-		return findNode_rec(kdn, noeud_courrant, disc);
+		return findNode_rec(kdn, vect_noeuds[0], disc);
 	}
 }
 
-KDNode KDTree::findNode_rec(KDNode kdn, KDNode nc, int disc)
+KDNode KDTree::findNode_rec(KDNode & kdn, KDNode & nc, int disc)
 {
+	Point temp_p(nb_dimension);
+	KDNode temp_kdn(temp_p);
+
 	if (kdn.getPoint().isPointEquals(nc.getPoint()))
 	{
 		return nc;
@@ -272,7 +286,7 @@ KDNode KDTree::findNode_rec(KDNode kdn, KDNode nc, int disc)
 	{
 		if (nc.getLeftChild() == nullptr)
 		{
-			Point p_default("default", { -1000, -1000 });
+			Point p_default("default", { -1000, -1000 }, nb_dimension);
 			KDNode default_node(p_default);
 			return default_node;
 		}
@@ -280,14 +294,15 @@ KDNode KDTree::findNode_rec(KDNode kdn, KDNode nc, int disc)
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			findNode_rec(kdn, *nc.getLeftChild(), disc);
+			temp_kdn = *nc.getLeftChild();
+			return findNode_rec(kdn, temp_kdn, disc);
 		}
 	}
 	else if (kdn.getPoint().getCoord()[disc] > nc.getPoint().getCoord()[disc])
 	{
 		if (nc.getRightChild() == nullptr)
 		{
-			Point p_default("default", { -1000, -1000 });
+			Point p_default("default", { -1000, -1000 }, nb_dimension);
 			KDNode default_node(p_default);
 			return default_node;
 		}
@@ -295,7 +310,8 @@ KDNode KDTree::findNode_rec(KDNode kdn, KDNode nc, int disc)
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			findNode_rec(kdn, *nc.getRightChild(), disc);
+			temp_kdn = *nc.getRightChild();
+			return findNode_rec(kdn, temp_kdn, disc);
 		}
 	}
 }
@@ -309,7 +325,7 @@ void KDTree::toString()
 	else
 	{
 		niveau_actuel = 0;
-		Point point_courant;
+		Point point_courant(nb_dimension);
 		KDNode noeud_courrant(point_courant);
 		noeud_courrant = vect_noeuds[0];
 		int disc = niveau_actuel % nb_dimension;

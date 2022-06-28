@@ -10,13 +10,14 @@
 int main()
 {
     // Création du tree
-    KDTree tree(2);
+    int nb_dim = 2;
+    KDTree tree(nb_dim);
 
     // Création des points
-    Point racine("A", { 40, 45 });
-    Point pointB("B", { 15, 70 });
-    Point pointC("C", { 70, 10 });
-    Point pointD("D", { 69, 50 });
+    Point racine("A", { 40, 45 }, nb_dim);
+    Point pointB("B", { 15, 70 }, nb_dim);
+    Point pointC("C", { 70, 10 }, nb_dim);
+    Point pointD("D", { 69, 50 }, nb_dim);
 
     // Creation des KDNode
     KDNode kdRacine(racine);
@@ -29,6 +30,10 @@ int main()
     tree.addNode(kdB, tree.getVect_Noeuds());
     tree.addNode(kdC, tree.getVect_Noeuds());
     tree.addNode(kdD, tree.getVect_Noeuds());
+
+    // Recherche simple de noeud 
+    KDNode nouveau_noeud = tree.findNode(pointD);
+    nouveau_noeud = tree.findNode(pointC);
 
     //Supression des points dans l'arbre
     std::vector<KDNode> vec_children_stay;

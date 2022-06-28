@@ -1,17 +1,25 @@
 #include "Point.h"
 
-Point::Point()
+
+Point::Point(int const& nb_d)
+	: nb_dim(nb_d)
 {
 }
 
 Point::~Point()
 {
 	pointName = "";
-	coord.clear();
+	if(coord.size() <= nb_dim)
+		coord.clear();
+	else
+	{
+		coord.resize(nb_dim);
+		coord.clear();
+	}
 }
 
-Point::Point(std::string const& pn, std::vector<int>const& c)
-	: pointName(pn) ,coord(c)
+Point::Point(std::string const& pn, std::vector<int>const& c, int const & nb_d)
+	: pointName(pn) ,coord(c), nb_dim(nb_d)
 {
 }
 

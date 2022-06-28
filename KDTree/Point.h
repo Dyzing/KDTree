@@ -3,17 +3,18 @@
 #include <vector>
 #include <string>
 
+
 class Point
 {
 private:
 	std::string pointName;
 	std::vector<int> coord;
-
+	int nb_dim;
 
 public:
-	Point();
+	Point(int const& nb_d);
 	~Point();
-	Point(std::string const & pn, std::vector<int> const& c);
+	Point(std::string const & pn, std::vector<int> const& c, int const & nb_d);
 
 	std::string getPointName() const { return pointName; };
 	std::vector<int> getCoord() const{ return coord; };
