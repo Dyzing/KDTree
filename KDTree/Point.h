@@ -12,6 +12,7 @@ private:
 
 public:
 	Point();
+	~Point();
 	Point(std::string const & pn, std::vector<int> const& c);
 
 	std::string getPointName() const { return pointName; };

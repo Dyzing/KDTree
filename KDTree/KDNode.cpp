@@ -7,28 +7,39 @@ KDNode::KDNode(Point p)
 
 KDNode::~KDNode()
 {
+	this->point.~Point();
+	this->leftChild = nullptr;
+	this->rightChild = nullptr;
 }
 
-KDNode* KDNode::getLeftChild()
+KDNode& KDNode::operator=(KDNode const& k)
+{
+	this->point = k.getPoint();
+	this->leftChild = k.getLeftChild();
+	this->rightChild = k.getRightChild();
+	return *this;
+}
+
+KDNode* KDNode::getLeftChild() const
 {
 	return leftChild;
 }
 
-KDNode* KDNode::getRightChild()
+KDNode* KDNode::getRightChild() const
 {
 	return rightChild;
 }
 
 void KDNode::setLeftChild(KDNode* const& lc)
 {
-	if (leftChild != nullptr)
-		delete(leftChild);
+	//if (leftChild != nullptr)
+	//	delete(leftChild);
 	leftChild = lc;
 }
 
 void KDNode::setRightChild(KDNode* const& rc)
 {
-	if (rightChild != nullptr)
-		delete(rightChild);
+	//if (rightChild != nullptr)
+	//	delete(rightChild);
 	rightChild = rc;
 }

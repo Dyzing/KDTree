@@ -1,5 +1,9 @@
 ﻿  KDTree.cpp
-  main.cpp
-  Génération de code en cours...
-D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(216): warning C4715: 'KDTree::findNode_rec' : les chemins de contrôle ne retournent pas tous une valeur
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(52,13): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(76,13): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(91,20): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(129,22): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(156,20): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(199,21): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(301): warning C4715: 'KDTree::findNode_rec' : les chemins de contrôle ne retournent pas tous une valeur
   KDTree.vcxproj -> D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\Debug\KDTree.exe

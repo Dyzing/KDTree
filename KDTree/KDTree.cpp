@@ -28,13 +28,13 @@ void KDTree::addNode(KDNode & kdn, std::vector<KDNode>& vn)
 		KDNode noeud_courrant(point_courant);
 		noeud_courrant = vn[0];
 		int disc = niveau_actuel % nb_dimension;
-		addNode_rec(kdn, vn[0], disc);
+		addNode_rec(kdn, vn[0], disc, vn);
 	}
 	vect_noeuds.push_back(kdn);
 
 }
 
-void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc)
+void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc, std::vector<KDNode>& vn)
 {
 	if (kdn.getPoint().getCoord()[disc] < nc.getPoint().getCoord()[disc])
 	{
@@ -48,7 +48,16 @@ void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc)
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			addNode_rec(kdn, *nc.getLeftChild(), disc);
+			int i = 0;
+			while (i < vn.size())
+			{
+				if (vn[i].getPoint().isPointEquals(nc.getLeftChild()->getPoint()))
+				{
+					addNode_rec(kdn, vn[i], disc, vn);
+					break;
+				}
+				i++;
+			}
 		}
 	}
 	else if (kdn.getPoint().getCoord()[disc] > nc.getPoint().getCoord()[disc])
@@ -63,14 +72,31 @@ void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc)
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			addNode_rec(kdn, *nc.getRightChild(), disc);
+			int i = 0;
+			while (i < vn.size())
+			{
+				if (vn[i].getPoint().isPointEquals(nc.getRightChild()->getPoint()))
+				{
+					addNode_rec(kdn, vn[i], disc, vn);
+					break;
+				}
+				i++;
+			}
 		}
 	}
 }
 
-void KDTree::deleteNode(KDNode& kdn, std::vector<KDNode>& vn)
+void KDTree::deleteNode(KDNode& kdn, std::vector<KDNode>& vn, std::vector<KDNode>& vec_childrens_stay)
 {
-	//KDNode kdn(p);
+	for (int i = 0; i < vn.size(); i++)
+	{
+		if (vn[i].getPoint().isPointEquals(kdn.getPoint()))
+		{
+			kdn = vn[i];
+			break;
+		}		
+	}
+
 	std::vector<KDNode> vec_descendance;
 	if (vect_noeuds.size() == 0)
 	{
@@ -83,24 +109,57 @@ void KDTree::deleteNode(KDNode& kdn, std::vector<KDNode>& vn)
 		KDNode noeud_courrant(point_courant);
 		noeud_courrant = vect_noeuds[0];
 		int disc = niveau_actuel % nb_dimension;
-		deleteNode_rec(kdn, vect_noeuds[0], disc, vec_descendance, vn);
+		deleteNode_rec(kdn, vect_noeuds[0], disc, vec_descendance, vect_noeuds, vec_childrens_stay);
 	}
 }
 
-void KDTree::deleteNode_rec(KDNode& kdn, KDNode nc, int disc, std::vector<KDNode> vec_children, std::vector<KDNode>& vn)
+void KDTree::deleteNode_rec(KDNode& kdn, KDNode & nc, int disc, std::vector<KDNode> vec_children, std::vector<KDNode>& vn, std::vector<KDNode>& vec_childrens_stay)
 {
+	Point temp_p;
+	KDNode temp_kdn(temp_p);
 	if (kdn.getPoint().isPointEquals(nc.getPoint()))
 	{
 		if (nc.getLeftChild() != nullptr)
-			putChildrenInVec_rec(*nc.getLeftChild(), disc, vec_children);
+			putChildrenInVec_rec(*nc.getLeftChild(), disc, vec_children, vn, nc, vec_childrens_stay);
 		if (nc.getRightChild() != nullptr)
-			putChildrenInVec_rec(*nc.getRightChild(), disc, vec_children);
-		else if((nc.getLeftChild() == nullptr) && (nc.getRightChild() == nullptr))		
-			vect_noeuds.pop_back();
-		for (KDNode child : vec_children)
+			putChildrenInVec_rec(*nc.getRightChild(), disc, vec_children, vn, nc, vec_childrens_stay);
+		if ((nc.getLeftChild() == nullptr) && (nc.getRightChild() == nullptr))
 		{
-			addNode(child, vn);
+			
+			for (int i = 0; i < vn.size(); i++)
+			{
+				if (vn[i].getPoint().isPointEquals(nc.getPoint()))
+				{
+					vn.erase(vn.begin() + i);
+					break;
+					//nc.~KDNode();
+
+				}
+				if (vn[i].getLeftChild() != nullptr)
+				{
+					if (vn[i].getLeftChild()->getPoint().isPointEquals(nc.getPoint()))
+					{
+						vn[i].setLeftChild(nullptr);
+					}
+				}
+				if (vn[i].getRightChild() != nullptr)
+				{
+					if (vn[i].getRightChild()->getPoint().isPointEquals(nc.getPoint()))
+					{
+						vn[i].setRightChild(nullptr);
+					}
+				}
+			}
+
 		}
+		
+		for(int i = 0; i < vec_children.size(); ++i)
+		{
+			temp_kdn = vec_childrens_stay[i];
+			addNode_rec(vec_childrens_stay[i], vn[0], disc, vn);
+			//addNode(vec_children[i], vect_noeuds);
+		}
+		vec_children.clear();
 	}
 	else if (kdn.getPoint().getCoord()[disc] < nc.getPoint().getCoord()[disc])
 	{
@@ -112,7 +171,7 @@ void KDTree::deleteNode_rec(KDNode& kdn, KDNode nc, int disc, std::vector<KDNode
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			deleteNode_rec(kdn, *nc.getLeftChild(), disc, vec_children, vn);
+			deleteNode_rec(kdn, *nc.getLeftChild(), disc, vec_children, vn, vec_childrens_stay);
 		}
 	}
 	else if (kdn.getPoint().getCoord()[disc] > nc.getPoint().getCoord()[disc])
@@ -125,17 +184,43 @@ void KDTree::deleteNode_rec(KDNode& kdn, KDNode nc, int disc, std::vector<KDNode
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			deleteNode_rec(kdn, *nc.getRightChild(), disc, vec_children, vn);
+			deleteNode_rec(kdn, *nc.getRightChild(), disc, vec_children, vn, vec_childrens_stay);
 		}
 	}
 }
 
-void KDTree::putChildrenInVec_rec(KDNode& nc, int disc, std::vector<KDNode> vec_children)
+void KDTree::putChildrenInVec_rec(KDNode& nc, int disc, std::vector<KDNode> & vec_children, std::vector<KDNode>& vn, KDNode& new_nc, std::vector<KDNode>& vec_childrens_stay)
 {
 	if (nc.getLeftChild() == nullptr && nc.getRightChild() == nullptr)
 	{
 		vec_children.push_back(nc);
-		delete(&nc);
+		vec_childrens_stay.push_back(nc);
+
+		for (int i = 0; i < vn.size(); i++)
+		{
+			if (vn[i].getPoint().isPointEquals(nc.getPoint()))
+			{
+				vn.erase(vn.begin() + i);
+				break;
+
+			}
+			if (vn[i].getLeftChild() != nullptr)
+			{
+				if (vn[i].getLeftChild()->getPoint().isPointEquals(nc.getPoint()))
+				{
+					vn[i].setLeftChild(nullptr);
+					new_nc = vn[i];
+				}
+			}
+			if (vn[i].getRightChild() != nullptr)
+			{
+				if (vn[i].getRightChild()->getPoint().isPointEquals(nc.getPoint()))
+				{
+					vn[i].setRightChild(nullptr);
+					new_nc = vn[i];
+				}
+			}
+		}
 	}
 	else
 	{
@@ -143,7 +228,7 @@ void KDTree::putChildrenInVec_rec(KDNode& nc, int disc, std::vector<KDNode> vec_
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			putChildrenInVec_rec(*nc.getLeftChild(), disc, vec_children);
+			putChildrenInVec_rec(*nc.getLeftChild(), disc, vec_children, vn, new_nc, vec_childrens_stay);
 			vec_children.push_back(nc);
 			nc.setLeftChild(nullptr);
 		}
@@ -151,7 +236,7 @@ void KDTree::putChildrenInVec_rec(KDNode& nc, int disc, std::vector<KDNode> vec_
 		{
 			++niveau_actuel;
 			disc = niveau_actuel % nb_dimension;
-			putChildrenInVec_rec(*nc.getRightChild(), disc, vec_children);
+			putChildrenInVec_rec(*nc.getRightChild(), disc, vec_children, vn, new_nc, vec_childrens_stay);
 			nc.setRightChild(nullptr);
 		}
 	}

@@ -17,8 +17,10 @@ public:
 
 	Point getPoint() const { return point; };
 
-	KDNode* getLeftChild();
-	KDNode* getRightChild();
+	KDNode& operator=(KDNode const& k);
+
+	KDNode* getLeftChild() const;
+	KDNode* getRightChild() const;
 	void setLeftChild(KDNode* const & lc);
 	void setRightChild(KDNode* const & rc);
 };
