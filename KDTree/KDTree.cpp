@@ -29,13 +29,14 @@ void KDTree::addNode(KDNode & kdn, std::vector<KDNode>& vn)
 		KDNode noeud_courrant(point_courant);
 		noeud_courrant = vn[0];
 		int disc = niveau_actuel % nb_dimension;
-		addNode_rec(kdn, vn[0], disc, vn);
+		bool b = false;
+		addNode_rec(kdn, vn[0], disc, vn, b);
 	}
 	vect_noeuds.push_back(kdn);
 
 }
 
-void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc, std::vector<KDNode>& vn)
+void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc, std::vector<KDNode>& vn, bool & b)
 {
 	if (kdn.getPoint().getCoord()[disc] < nc.getPoint().getCoord()[disc])
 	{
@@ -54,12 +55,13 @@ void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc, std::vector<KDNode>
 			{
 				if (vn[i].getPoint().isPointEquals(nc.getLeftChild()->getPoint()))
 				{
-					addNode_rec(kdn, *nc.getLeftChild(), disc, vn);
+					addNode_rec(kdn, *nc.getLeftChild(), disc, vn, b);
 					//break;
 				}
-				if (vn[i].getPoint().isPointEquals(nc.getLeftChild()->getPoint()))
+				if (vn[i].getPoint().isPointEquals(nc.getLeftChild()->getPoint())/* && b == false*/)
 				{
-					addNode_rec(kdn, vn[i], disc, vn);
+					addNode_rec(kdn, vn[i], disc, vn, b);
+					//b = true;
 					break;
 				}
 				i++;
@@ -83,14 +85,15 @@ void KDTree::addNode_rec(KDNode &kdn, KDNode & nc, int disc, std::vector<KDNode>
 			{
 				if (vn[i].getPoint().isPointEquals(nc.getRightChild()->getPoint()))
 				{
-					addNode_rec(kdn, *nc.getRightChild(), disc, vn);
+					addNode_rec(kdn, *nc.getRightChild(), disc, vn, b);
 					//addNode_rec(kdn, vn[i], disc, vn);
 					//break;
 				}
-				if (vn[i].getPoint().isPointEquals(nc.getRightChild()->getPoint()))
+				if (vn[i].getPoint().isPointEquals(nc.getRightChild()->getPoint()) /*&& b == false*/)
 				{
-					addNode_rec(kdn, vn[i], disc, vn);
-					break;
+					addNode_rec(kdn, vn[i], disc, vn, b);
+					//b = true;
+					return;
 				}
 				i++;
 			}
@@ -333,6 +336,7 @@ KDNode KDTree::findCloser_rec(KDNode& kdn, std::vector<KDNode>& vn, KDNode& clos
 		}
 		else
 		{
+			distance_pow_closest = 0;
 			for (int i = 0; i < nb_dimension; i++)
 			{
 				distance_pow_closest += pow(vn[j].getPoint().getCoord()[i] - kdn.getPoint().getCoord()[i], 2);

@@ -1,2 +1,11 @@
-﻿  main.cpp
+﻿  KDTree.cpp
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(54,13): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(84,13): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(106,20): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(144,22): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(231,22): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(331,20): warning C4018: '<' : incompatibilité signed/unsigned
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(342,98): warning C4244: '+=' : conversion de 'double' en 'int', perte possible de données
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(345,27): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\KDTree\KDTree.cpp(321): warning C4715: 'KDTree::findNode_rec' : les chemins de contrôle ne retournent pas tous une valeur
   KDTree.vcxproj -> D:\UQAC\Session 3\Structure de données\KDTreeEX1\KDTree\Debug\KDTree.exe
