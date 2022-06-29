@@ -1,5 +1,6 @@
 #include <iostream>
 #include "KDTree.h"
+#include <cmath>
 
 KDTree::KDTree()
 	:nb_dimension(1), discriminateur(0), niveau_total(0), niveau_actuel(0)
@@ -164,11 +165,11 @@ void KDTree::deleteNode_rec(KDNode& kdn, KDNode & nc, int disc, std::vector<KDNo
 
 		}
 		
-		for(int i = 0; i < vec_children.size(); ++i)
+		for(int i = vec_children.size() - 1; i >= 0; --i)
 		{
 			temp_kdn = vec_childrens_stay[i];
-			addNode_rec(vec_childrens_stay[i], vn[0], disc, vn);
-			//addNode(vec_children[i], vect_noeuds);
+			//addNode_rec(vec_childrens_stay[i], vn[0], disc, vn);
+			addNode(vec_childrens_stay[i], vn);
 		}
 		vec_children.clear();
 	}
@@ -202,38 +203,6 @@ void KDTree::deleteNode_rec(KDNode& kdn, KDNode & nc, int disc, std::vector<KDNo
 
 void KDTree::putChildrenInVec_rec(KDNode& nc, int disc, std::vector<KDNode> & vec_children, std::vector<KDNode>& vn, KDNode& new_nc, std::vector<KDNode>& vec_childrens_stay)
 {
-	if (nc.getLeftChild() == nullptr && nc.getRightChild() == nullptr)
-	{
-		vec_children.push_back(nc);
-		vec_childrens_stay.push_back(nc);
-
-		for (int i = 0; i < vn.size(); i++)
-		{
-			if (vn[i].getPoint().isPointEquals(nc.getPoint()))
-			{
-				vn.erase(vn.begin() + i);
-				break;
-
-			}
-			if (vn[i].getLeftChild() != nullptr)
-			{
-				if (vn[i].getLeftChild()->getPoint().isPointEquals(nc.getPoint()))
-				{
-					vn[i].setLeftChild(nullptr);
-					new_nc = vn[i];
-				}
-			}
-			if (vn[i].getRightChild() != nullptr)
-			{
-				if (vn[i].getRightChild()->getPoint().isPointEquals(nc.getPoint()))
-				{
-					vn[i].setRightChild(nullptr);
-					new_nc = vn[i];
-				}
-			}
-		}
-	}
-	else
 	{
 		if (nc.getLeftChild() != nullptr)
 		{
@@ -249,6 +218,38 @@ void KDTree::putChildrenInVec_rec(KDNode& nc, int disc, std::vector<KDNode> & ve
 			disc = niveau_actuel % nb_dimension;
 			putChildrenInVec_rec(*nc.getRightChild(), disc, vec_children, vn, new_nc, vec_childrens_stay);
 			nc.setRightChild(nullptr);
+		}
+
+		if (nc.getLeftChild() == nullptr && nc.getRightChild() == nullptr)
+		{
+			vec_children.push_back(nc);
+			vec_childrens_stay.push_back(nc);
+
+			for (int i = 0; i < vn.size(); i++)
+			{
+				if (vn[i].getPoint().isPointEquals(nc.getPoint()))
+				{
+					vn.erase(vn.begin() + i);
+					break;
+
+				}
+				if (vn[i].getLeftChild() != nullptr)
+				{
+					if (vn[i].getLeftChild()->getPoint().isPointEquals(nc.getPoint()))
+					{
+						vn[i].setLeftChild(nullptr);
+						new_nc = vn[i];
+					}
+				}
+				if (vn[i].getRightChild() != nullptr)
+				{
+					if (vn[i].getRightChild()->getPoint().isPointEquals(nc.getPoint()))
+					{
+						vn[i].setRightChild(nullptr);
+						new_nc = vn[i];
+					}
+				}
+			}
 		}
 	}
 }
@@ -314,6 +315,43 @@ KDNode KDTree::findNode_rec(KDNode & kdn, KDNode & nc, int disc)
 			return findNode_rec(kdn, temp_kdn, disc);
 		}
 	}
+}
+
+KDNode KDTree::findCloser_rec(KDNode& kdn, std::vector<KDNode>& vn, KDNode& closest_kdn)
+{	
+	int distance_pow_closest = 0;
+	int distance_closest;
+	int distance_closest_min = 100000;
+
+	closest_kdn.getPoint().setCoord({ 100000, 100000 });
+
+	for (int j = 0; j < vn.size(); j++)
+	{
+		if (kdn.getPoint().isPointEquals(vn[j].getPoint()))
+		{
+			continue;
+		}
+		else
+		{
+			for (int i = 0; i < nb_dimension; i++)
+			{
+				distance_pow_closest += pow(vn[j].getPoint().getCoord()[i] - kdn.getPoint().getCoord()[i], 2);
+			}
+
+			distance_closest = sqrt(distance_pow_closest);
+
+			if (distance_closest < distance_closest_min)
+			{
+				distance_closest_min = distance_closest;
+				closest_kdn = vn[j];
+				closest_kdn.setPoint(vn[j].getPoint());
+			}
+		}
+
+	}
+
+	return closest_kdn;
+	
 }
 
 void KDTree::toString()

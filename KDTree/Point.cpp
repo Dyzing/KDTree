@@ -23,8 +23,26 @@ Point::Point(std::string const& pn, std::vector<int>const& c, int const & nb_d)
 {
 }
 
+void Point::setPointName(std::string const& s)
+{
+	pointName = s;
+}
+
+void Point::setCoord(std::vector<int> const& new_coord)
+{
+	coord = new_coord;
+}
+
 bool Point::isPointEquals(Point const& p2) const
 {
 	return std::equal(coord.begin(), coord.end(), p2.getCoord().begin());
+}
+
+Point& Point::operator=(Point const& p)
+{
+	this->pointName = p.pointName;
+	this->coord = p.coord;
+	this->nb_dim = p.nb_dim;
+	return *this;
 }
 

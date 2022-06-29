@@ -17,7 +17,10 @@ public:
 	Point(std::string const & pn, std::vector<int> const& c, int const & nb_d);
 
 	std::string getPointName() const { return pointName; };
+	void setPointName(std::string const & s);
 	std::vector<int> getCoord() const{ return coord; };
+	void setCoord(std::vector<int> const& new_coord);
 	bool isPointEquals(Point const& p2) const;
+	Point& operator=(Point const& p);
 };
 

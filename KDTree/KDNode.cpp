@@ -12,9 +12,14 @@ KDNode::~KDNode()
 	this->rightChild = nullptr;
 }
 
+void KDNode::setPoint(Point const& p)
+{
+	point = p;
+}
+
 KDNode& KDNode::operator=(KDNode const& k)
 {
-	this->point = k.getPoint();
+	this->point = k.point;
 	this->leftChild = k.getLeftChild();
 	this->rightChild = k.getRightChild();
 	return *this;

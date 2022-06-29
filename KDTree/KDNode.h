@@ -16,7 +16,7 @@ public:
 	~KDNode();
 
 	Point getPoint() const { return point; };
-
+	void setPoint(Point const& p);
 	KDNode& operator=(KDNode const& k);
 
 	KDNode* getLeftChild() const;

@@ -27,6 +27,7 @@ public:
 	void putChildrenInVec_rec(KDNode& nc, int  disc, std::vector<KDNode> & vec_children, std::vector<KDNode>& vn, KDNode & new_nc, std::vector<KDNode>& vec_childrens_stay);
 	KDNode findNode(Point p);
 	KDNode findNode_rec(KDNode & kdn, KDNode & nc, int  disc);
+	KDNode findCloser_rec(KDNode & kdn, std::vector<KDNode>& vn, KDNode & closest_kdn);
 
 	void toString();
 	void toString_rec(KDNode kdn);
